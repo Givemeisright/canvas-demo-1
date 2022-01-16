@@ -32,9 +32,16 @@
         var isTouchDevice = 'ontouchstart' in
         document.documentElement
         if(isTouchDevice){
+            canvas.ontouchstart  = (e) => {
+                let x = e.touches[0].clientX
+                let y = e.touches[0].clientY
+                last = [x,y]
+            }
             canvas.ontouchmove = (e)=>{
-                last = [e.touches[0].clientX,e.touches[0].clientY]  
-                drawLine(last[0],last[1],e.touches[0].clientX,e.touches[0].clientY)  
+                let x = e.touches[0].clientX
+                let y = e.touches[0].clientY
+                drawLine(last[0],last[1],x,y)
+                last = [x,y]
             }
         } else {
             canvas.onmousedown = (e) => {
