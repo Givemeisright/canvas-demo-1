@@ -3,67 +3,126 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
     <title>画板</title>
+    <style type="text/css">
+        .icon {
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <canvas id="canvas" width="200" height="200"></canvas>
+    <div class="tools">
+        <button id="pen" title="画笔" class="active">
+            <svg class="icon">
+                <use xlink:href="#icon-pen"></use>
+            </svg>
+        </button>
+        <button id="eraser" title="橡皮擦"><svg class="icon">
+                <use xlink:href="#icon-eraser"></use>
+            </svg></button>
+        <button id="clear" title="清空"><svg class="icon">
+                <use xlink:href="#icon-clear"></use>
+            </svg></button>
+    </div>
+    <script src="//at.alicdn.com/t/font_3145146_xozaf0dpao.js"></script>
     <script>
+        // 初始化
         let canvas = document.getElementById("canvas");
-        canvas.width = document.documentElement.clientWidth
-        canvas.height = document.documentElement.clientHeight
-        let ctx = canvas.getContext("2d");
-        ctx.fillStyle = "black";
-        ctx.strokeStyle = 'black'
-        let last
-        function drawLine(x1,y1,x2,y2){
-            ctx.beginPath();
-            ctx.moveTo(x1,y1);
-            ctx.lineTo(x2,y2);
-            ctx.stroke();
-          
+        let context = canvas.getContext("2d");
+        let pen = document.getElementById("pen");
+        let eraser = document.getElementById("eraser");
+        let reset = document.getElementById("clear");
+        // 橡皮状态，默认false
+        let clear = false;
+
+        autoSetSize(canvas);
+        // 初始化背景颜色
+        setCanvasBg('white');
+
+        function setCanvasBg(color) {
+            context.fillStyle = color;
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = "black";
         }
-        ctx.lineWidth = 8;
-        ctx.lineCap = "round";
+
+        // 刷新页面警告
+        window.onbeforeunload = function () {
+            return "Reload site?";
+        };
+
+        // 画布大小设置
+        function autoSetSize(canvas) {
+            canvasSetSize();
+            function canvasSetSize() {
+                let pageWidth = document.documentElement.clientWidth;
+                let pageHeight = document.documentElement.clientHeight;
+
+                canvas.width = pageWidth;
+                canvas.height = pageHeight;
+            }
+
+            window.onresize = function () {
+                canvasSetSize();
+            }
+        }
+// -------------------------------------------------------------
+// 画笔功能
+        context.fillStyle = "black";
+        context.strokeStyle = 'black';
+
+        function drawLine(x1, y1, x2, y2) {
+            context.beginPath();
+            context.moveTo(x1, y1);
+            context.lineTo(x2, y2);
+            context.stroke();
+
+        }
+
+        let last
+        context.lineWidth = 8;
+        context.lineCap = "round";
         let painting = false
         var isTouchDevice = 'ontouchstart' in
-        document.documentElement
-        if(isTouchDevice){
-            canvas.ontouchstart  = (e) => {
+            document.documentElement
+        if (isTouchDevice) {
+            canvas.ontouchstart = (e) => {
                 let x = e.touches[0].clientX
                 let y = e.touches[0].clientY
-                last = [x,y]
+                last = [x, y]
             }
-            canvas.ontouchmove = (e)=>{
+            canvas.ontouchmove = (e) => {
                 let x = e.touches[0].clientX
                 let y = e.touches[0].clientY
-                drawLine(last[0],last[1],x,y)
-                last = [x,y]
+                drawLine(last[0], last[1], x, y)
+                last = [x, y]
             }
         } else {
             canvas.onmousedown = (e) => {
-            painting = true
-            last = [e.clientX,e.clientY]
+                painting = true
+                last = [e.clientX, e.clientY]
+            }
+            canvas.onmousemove = (e) => {
+                if (painting === true) {
+                    drawLine(last[0], last[1], e.clientX, e.clientY)
+                    last = [e.clientX, e.clientY]
+                }
+            }
+
+            canvas.onmouseup = () => {
+                painting = false
+            }
         }
-        canvas.onmousemove = (e) => {
-            if (painting === true) {
-                drawLine(last[0],last[1],e.clientX,e.clientY)
-                last = [e.clientX,e.clientY]
-            } 
-        }
-
-        canvas.onmouseup = () => {
-            painting = false
-        }
-        }
-
-
-
-
-
     </script>
 </body>
 
