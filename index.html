@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta http-equiv=" X-UA-Compatible" content="ie=edge">
     <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 
@@ -18,7 +19,7 @@
         }
     </style>
     <link rel="stylesheet" href="style.css">
-</head><!--  -->
+</head>
 
 <body>
     <canvas id="canvas"></canvas>
@@ -85,20 +86,23 @@
 
         getColor();
         // 刷新页面警告TODO
-        // window.onbeforeunload = () => {
-        //     return "Reload site?";
-        // };
+        window.onbeforeunload = () => {
+            return "Reload site?";
+        };
 
         // 画布大小设置
-        const autoSetSize = (canvas) => {
-            const canvasSetSize = () => {
+      
+
+        function autoSetSize(canvas) {
+            canvasSetSize();
+
+            function canvasSetSize() {
                 let pageWidth = document.documentElement.clientWidth;
                 let pageHeight = document.documentElement.clientHeight;
 
                 canvas.width = pageWidth;
                 canvas.height = pageHeight;
             }
-            canvasSetSize();
 
             window.onresize = function () {
                 canvasSetSize();
@@ -116,7 +120,8 @@
                 document.documentElement
             if (isTouchDevice) {
                 canvas.ontouchstart = (e) => {
-                    this.firstDot = context.getImageData(0, 0, canvas.width, canvas.height); //在这里储存绘图表面
+                    this.firstDot = context.getImageData(0, 0, canvas.width, canvas
+                        .height); //在这里储存绘图表面
                     painting = true;
 
                     let x = e.touches[0].clientX;
@@ -139,7 +144,8 @@
                 }
             } else {
                 canvas.onmousedown = (e) => {
-                    this.firstDot = context.getImageData(0, 0, canvas.width, canvas.height); //在这里储存绘图表面
+                    this.firstDot = context.getImageData(0, 0, canvas.width, canvas
+                        .height); //在这里储存绘图表面
                     painting = true;
                     let x = e.clientX;
                     let y = e.clientY;
@@ -241,7 +247,7 @@
             save.target = "_blank";
             save.click();
         };
-
+        // 获取颜色
         function getColor() {
             for (let i = 0; i < currentColor.length; i++) {
                 currentColor[i].onclick = function () {
@@ -256,7 +262,7 @@
             }
         }
 
-
+        // 画笔粗细
         range.onchange = function () {
             lWidth = this.value;
         };
