@@ -2,6 +2,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  user-select: none;
+
 }
 
 body {
@@ -53,8 +55,139 @@ svg {
 
 #pen,
 #eraser,
+#save,
 #clear {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.color-group {
+  left: 0;
+  top: auto;
+  bottom: 20px;
+  /* display: flex; */
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  transform: translate(0, 0)
+}
+
+.color-group ul {
+  list-style: none;
+}
+
+.color-group ul li {
+  width: 30px;
+  height: 30px;
+  margin: 20px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+  display: inline-block;
+  border: 2px solid black;
+}
+
+.color-group ul li.active {
+  border-radius: 10px;
+}
+
+.color-group ul li.active::after {
+  content: '↑';
+  position: absolute;
+  bottom: 0;
+  margin: 5px -3px;
+}
+
+#range-wrap {
+  position: fixed;
+  top: 50%;
+  right: 30px;
+  width: 0px;
+  height: 150px;
+  margin-top: -75px;
+}
+
+#range-wrap input {
+  transform: rotate(-90deg);
+  width: 250px;
+  transform-origin: 75px 75px;
+  border-radius: 15px;
+  outline: none;
+  position: relative;
+}
+
+#range-wrap input[type=range]::-webkit-slider-thumb,
+#range-wrap input[type=range]::-moz-range-thumb {
+  -webkit-appearance: none;
+}
+
+#range-wrap input[type=range]::-webkit-slider-runnable-track,
+#range-wrap input[type=range]::-moz-range-track {
+  height: 0px;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+#range-wrap input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  margin-top: 0px;
+  background: #ffffff;
+  border-radius: 50%;
+  border: solid 1px black;
+  position: relative;
+  z-index: 1;
+}
+
+@media screen and (max-width: 768px) {
+  .tools {
+    bottom: 0;
+    top: auto;
+  }
+
+  .tools button {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    margin-bottom: 15px;
+  }
+
+
+  .tools button i {
+    font-size: 18px;
+  }
+
+  .tools #swatches {
+    display: none
+  }
+
+  .color-group {
+    left: 0;
+    top: auto;
+    bottom: 20px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    transform: translate(0, 0)
+  }
+
+  .color-group ul li {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin: 20px 0px;
+  }
+
+  .color-group ul li.active {
+    border-radius: 5px;
+  }
+
+  svg {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+  }
 }
