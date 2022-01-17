@@ -80,49 +80,8 @@
 
         autoSetSize(canvas);
 
-        // -------------------------------------------------------------
-        // 画笔功能
-        let lWidth = 6;
-        context.lineCap = "round";
-        context.lineJoin = "round";
-        const drawCircle = (x, y, size) => {
-            context.save();
-            context.beginPath();
-            context.arc(x, y, size, 0, Math.PI * 2);
-            context.fill();
-            if (clear) {
-                context.clip();
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                context.restore();
-            }
-            context.closePath();
-        }
-
-        const drawLine = (x1, y1, x2, y2) => {
-            context.lineWidth = lWidth;
-            context.beginPath();
-            if (clear) {
-                context.save();
-
-                context.globalCompositeOperation = "source-over";
-                context.moveTo(x1, y1);
-                context.lineTo(x2, y2);
-                context.stroke();
-                context.closePath();
-                context.clip();
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                context.restore();
-            } else {
-                context.moveTo(x1, y1);
-                context.lineTo(x2, y2);
-                context.stroke();
-                context.closePath();
-            }
-        }
-
-
         // -------------------------------------------------------------------
-        const listenToUser = (canvas) => {
+        listenToUser = function (canvas) {
             let painting = false;
             let last
             var isTouchDevice = 'ontouchstart' in
@@ -162,7 +121,7 @@
                 };
                 canvas.onmousemove = (e) => {
                     if (painting) {
-                        drawLine(last[0], last[1], e.clientX, e.clientY, clear);
+                        drawLine(last[0], last[1], e.clientX, e.clientY);
                         last = [e.clientX, e.clientY];
                     }
                 };
@@ -178,6 +137,56 @@
         }
         listenToUser(canvas);
 
+        // -------------------------------------------------------------
+        // 画笔功能
+        let lWidth = 6;
+
+        const drawCircle = (x, y, size) => {
+            if (!clear) {
+                context.beginPath();
+                context.arc(x, y, size, 0, Math.PI * 2);
+                context.fill();
+                context.closePath();
+            }
+            if (clear) {
+                context.beginPath();
+                context.arc(x, y, 0, 0, Math.PI * 2);
+                context.fill();
+                context.clip();
+                context.globalCompositeOperation = "destination-out";
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.restore();
+                context.closePath();
+            }
+            context.save();
+
+        }
+
+        drawLine = function (x1, y1, x2, y2) {
+            context.lineWidth = lWidth;
+            context.lineCap = "round";
+            context.lineJoin = "round";
+
+            if (clear) {
+                context.beginPath();
+                context.globalCompositeOperation = "destination-out";
+                context.moveTo(x1, y1);
+                context.lineTo(x2, y2);
+                context.stroke();
+                context.clip();
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.restore();
+                context.closePath();
+            } else {
+                context.beginPath();
+                context.moveTo(x1, y1);
+                context.lineTo(x2, y2);
+                context.stroke();
+                context.closePath();
+            }
+            context.save();
+        }
+
 
         eraser.onclick = function () {
             clear = true;
@@ -189,6 +198,11 @@
             clear = false;
             this.classList.add("active");
             eraser.classList.remove("active");
+        };
+
+        reset.onclick = function () {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            setCanvasBg('white');
         };
     </script>
 </body>
